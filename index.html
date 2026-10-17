@@ -173,10 +173,44 @@
   @keyframes showUp { to { opacity: 1; filter: blur(0); transform: translateY(0); } }
   @keyframes fadeOutSequence { 0%, 60% { opacity: 1; filter: blur(0); } 100% { opacity: 0; filter: blur(20px); visibility: hidden; } }
   @keyframes slideRight { to { opacity: 1; transform: translateX(0); } }
+ /* --- 自定义鼠标指针样式 --- */
+body {
+  cursor: none; /* 隐藏系统指针 */
+}
+.custom-cursor {
+  position: fixed;
+  width: 24px;
+  height: 24px;
+  border: 2px solid #ff9d00; /* 橙黄色 */
+  border-radius: 50%;
+  pointer-events: none; 
+  z-index: 99999;
+  transform: translate(-50%, -50%); 
+  transition: width 0.3s ease, height 0.3s ease, background-color 0.2s ease;
+  left: -100px; 
+  top: -100px;
+}
+.custom-cursor.active {
+  background-color: #ff9d00;
+}
+.custom-cursor.hover {
+  width: 40px;
+  height: 40px;
+}
+
+/* --- 3D 视差基础设置 --- */
+.right-images {
+  perspective: 1000px; 
+}
+.hover-img {
+  transition: opacity 0.6s ease, transform 0.1s ease-out; 
+}
 </style>
 </head>
 <body>
 
+ <div class="custom-cursor"></div>
+ 
   <!-- 1. 入场动画 -->
   <div id="intro-screen">
     <h1>無限可能</h1>
@@ -216,7 +250,10 @@
       <button id="close-announcement">我知道了</button>
     </div>
   </div>
-
+ 
+<!-- 自定义鼠标指针 -->
+<div class="custom-cursor"></div>
+ 
   <!-- 4. 正在制作页 -->
   <div id="detail-page">
     <h1>正在制作</h1>
@@ -400,6 +437,57 @@
       // 隐藏租赁页
       document.getElementById('rent-page').classList.remove('active');
     });
+
+   // ================= 1. 自定义光标逻辑 =================
+const cursor = document.querySelector('.custom-cursor');
+
+document.addEventListener('mousemove', (e) => {
+  cursor.style.left = e.clientX + 'px';
+  cursor.style.top = e.clientY + 'px';
+});
+
+document.addEventListener('mousedown', () => {
+  cursor.classList.add('active');
+});
+document.addEventListener('mouseup', () => {
+  cursor.classList.remove('active');
+});
+
+const interactables = document.querySelectorAll('button, a, .nav-line-item, .back-btn');
+interactables.forEach(el => {
+  el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+  el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+});
+
+// ================= 2. 图片 3D 视差效果 =================
+const rightArea = document.querySelector('.right-images');
+const hoverImages = document.querySelectorAll('.hover-img');
+
+rightArea.addEventListener('mousemove', (e) => {
+  const rect = rightArea.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+  const centerX = rect.width / 2;
+  const centerY = rect.height / 2;
+
+  const rotateX = ((y - centerY) / centerY) * -10;
+  const rotateY = ((x - centerX) / centerX) * 10;
+
+  hoverImages.forEach(img => {
+    if (img.classList.contains('show')) {
+      img.style.transform = `scale(1) translateX(0) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+    }
+  });
+});
+
+rightArea.addEventListener('mouseleave', () => {
+  hoverImages.forEach(img => {
+    if (img.classList.contains('show')) {
+      img.style.transform = `scale(1) translateX(0) rotateX(0) rotateY(0)`;
+    }
+  });
+});
+   
   </script>
 </body>
 </html>
