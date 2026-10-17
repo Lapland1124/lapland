@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>無限可能 - 快门即是永恒</title>
 <style>
-  /* 基础设置：黑底白字，铺满全屏 */
+  /* 基础设置 */
   body {
     margin: 0;
     padding: 0;
@@ -19,100 +19,199 @@
     overflow: hidden;
   }
 
-  /* ----- 第一部分：入场文字动画 ----- */
+  /* ----- 1. 入场文字动画 ----- */
   #intro-screen {
     position: absolute;
     text-align: center;
-    /* 整体动画：出现 -> 停留 -> 淡出消失 */
+    z-index: 10;
     animation: fadeOutSequence 5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
   }
-
   #intro-screen h1 {
     font-size: 48px;
     font-weight: 600;
     letter-spacing: 2px;
     margin-bottom: 10px;
-    opacity: 0;
-    filter: blur(15px);
-    transform: translateY(20px);
-    /* 文字浮现动画 */
+    opacity: 0; filter: blur(15px); transform: translateY(20px);
     animation: appleFadeIn 1.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
     animation-delay: 0.5s;
   }
-
   #intro-screen p {
-    font-size: 20px;
-    color: #86868b;
-    letter-spacing: 4px;
-    margin-top: 0;
-    opacity: 0;
-    filter: blur(10px);
-    transform: translateY(20px);
+    font-size: 20px; color: #86868b; letter-spacing: 4px; margin-top: 0;
+    opacity: 0; filter: blur(10px); transform: translateY(20px);
     animation: appleFadeIn 1.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
     animation-delay: 1.2s;
   }
 
-  /* ----- 第二部分：主页选项动画 ----- */
+  /* ----- 2. 主页布局 (左右分栏) ----- */
   #main-screen {
-    text-align: center;
+    display: flex;
+    width: 100%;
+    height: 100vh;
+    opacity: 0;
+    animation: appleFadeIn 1.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    animation-delay: 4.5s; /* 等入场动画结束 */
+    pointer-events: none; /* 动画完再允许点击 */
+  }
+  #main-screen.active { pointer-events: auto; }
+
+  /* 左侧菜单 */
+  .left-menu {
+    width: 40%;
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    padding-left: 10%;
     gap: 20px;
-    opacity: 0;
-    /* 延迟4.5秒出现（等前面的字消失） */
-    animation: appleFadeIn 1.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-    animation-delay: 4.5s;
-    /* 防止入场时误触 */
-    pointer-events: none;
+    z-index: 2;
   }
-
-  /* 按钮样式（苹果风格极简风） */
-  .btn {
-    display: inline-block;
-    padding: 18px 60px;
-    font-size: 18px;
-    color: #f5f5f7;
-    text-decoration: none;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 40px;
-    background: rgba(255, 255, 255, 0.05);
-    transition: all 0.4s ease;
+  .menu-btn {
+    background: transparent;
+    border: none;
+    color: #86868b; /* 默认灰色 */
+    font-size: 32px;
+    font-weight: 600;
+    text-align: left;
     cursor: pointer;
-    letter-spacing: 1px;
+    padding: 10px 0;
+    transition: all 0.4s ease;
+    letter-spacing: 2px;
+  }
+  /* 鼠标悬停时的文字效果 */
+  .menu-btn:hover {
+    color: #fff;
+    transform: translateX(10px); /* 向右微微移动 */
+    text-shadow: 0 0 20px rgba(255,255,255,0.3);
   }
 
-  /* 鼠标放上去的效果 */
-  .btn:hover {
-    background: rgba(255, 255, 255, 0.15);
-    border-color: rgba(255, 255, 255, 0.8);
-    transform: scale(1.05);
+  /* 右侧图片区域 */
+  .right-images {
+    width: 60%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+  }
+  .hover-img {
+    position: absolute;
+    max-width: 80%;
+    max-height: 80vh;
+    object-fit: contain;
+    opacity: 0; /* 默认隐藏 */
+    transition: opacity 0.6s ease, transform 0.6s ease;
+    transform: scale(0.95);
+    border-radius: 12px;
+  }
+  /* 当左侧悬浮时，显示对应图片 */
+  .menu-btn:hover ~ .right-images #img-camera,
+  .menu-btn:hover ~ .right-images #img-rent {
+      /* 占位，具体由JS或下方CSS控制 */
+  }
+  
+  /* 用 CSS 直接控制图片显隐，更顺滑 */
+  #main-screen:hover #img-camera { opacity: 1; transform: scale(1); }
+  /* 注意：因为两个按钮都在左侧，我们通过JS来控制精准显示 */
+  .hover-img.show {
+    opacity: 1 !important;
+    transform: scale(1) !important;
   }
 
-  /* ----- 动画关键帧定义 ----- */
+  /* ----- 3. 详情页 (转场后) ----- */
+  #detail-page {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: #000;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.8s ease;
+    z-index: 20;
+  }
+  #detail-page.active {
+    opacity: 1;
+    visibility: visible;
+  }
+  #detail-page h1 {
+    color: #86868b;
+    font-size: 40px;
+    letter-spacing: 4px;
+  }
+
+  /* ----- 动画关键帧 ----- */
   @keyframes appleFadeIn {
     100% { opacity: 1; filter: blur(0); transform: translateY(0); }
   }
-
   @keyframes fadeOutSequence {
-    0%, 60% { opacity: 1; filter: blur(0); } /* 0到3秒保持清晰 */
-    100% { opacity: 0; filter: blur(20px); } /* 第5秒完全模糊消失 */
+    0%, 60% { opacity: 1; filter: blur(0); }
+    100% { opacity: 0; filter: blur(20px); }
   }
 </style>
 </head>
 <body>
 
-  <!-- 入场文字 -->
+  <!-- 1. 入场文字 -->
   <div id="intro-screen">
     <h1>無限可能</h1>
-    <p>快门即是永恒</p>
+    <p>快门即是永恒</p >
   </div>
 
-  <!-- 主页按钮区 -->
-  <div id="main-screen" style="pointer-events: auto;">
-    <!-- href="#" 表示目前点击不跳转，以后你可以换成真正的链接 -->
-    <a href="#" class="btn">商业拍摄</a>
-    <a href="#" class="btn">影视道具租赁</a>
+  <!-- 2. 主页 -->
+  <div id="main-screen">
+    <div class="left-menu">
+      <button class="menu-btn" data-target="img-camera" onclick="showDetail()">商业拍摄</button>
+      <button class="menu-btn" data-target="img-rent" onclick="showDetail()">影视道具租赁</button>
+    </div>
+    
+    <div class="right-images">
+      <!-- 注意这里的 src 必须和你上传的图片文件名一致 -->
+      < img src="camera.jpg" id="img-camera" class="hover-img" alt="商业拍摄">
+      < img src="rent.jpg" id="img-rent" class="hover-img" alt="影视道具租赁">
+    </div>
   </div>
 
+  <!-- 3. 介绍页（正在制作） -->
+  <div id="detail-page">
+    <h1>正在制作</h1>
+    <p style="color:#555; margin-top:20px;">（点击屏幕任意位置返回）</p >
+  </div>
+
+  <!-- 交互脚本 -->
+  <script>
+    // 入场动画结束后，激活主页点击事件
+    setTimeout(() => {
+      document.getElementById('main-screen').classList.add('active');
+    }, 4500);
+
+    // 处理悬停显示图片
+    const buttons = document.querySelectorAll('.menu-btn');
+    const images = document.querySelectorAll('.hover-img');
+
+    buttons.forEach(btn => {
+      btn.addEventListener('mouseenter', () => {
+        // 隐藏所有图
+        images.forEach(img => img.classList.remove('show'));
+        // 显示对应的图
+        const targetId = btn.getAttribute('data-target');
+        document.getElementById(targetId).classList.add('show');
+      });
+      
+      btn.addEventListener('mouseleave', () => {
+        // 鼠标移出按钮，隐藏所有图
+        images.forEach(img => img.classList.remove('show'));
+      });
+    });
+
+    // 处理点击转场
+    function showDetail() {
+      document.getElementById('detail-page').classList.add('active');
+    }
+
+    // 点击详情页返回
+    document.getElementById('detail-page').addEventListener('click', () => {
+      document.getElementById('detail-page').classList.remove('active');
+    });
+  </script>
 </body>
 </html>
