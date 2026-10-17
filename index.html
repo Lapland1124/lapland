@@ -5,120 +5,174 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>無限可能 - 快门即是永恒</title>
 <style>
-  /* 基础设置 */
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  
   body {
-    margin: 0;
-    padding: 0;
     background-color: #000;
-    color: #f5f5f7;
+    color: #fff;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     overflow: hidden;
   }
 
-  /* ----- 1. 入场文字动画 ----- */
   #intro-screen {
     position: absolute;
-    text-align: center;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     z-index: 10;
-    animation: fadeOutSequence 5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    animation: fadeOutSequence 5s ease forwards;
   }
+  
   #intro-screen h1 {
-    font-size: 48px;
-    font-weight: 600;
-    letter-spacing: 2px;
-    margin-bottom: 10px;
+    font-size: 60px;
+    letter-spacing: 5px;
+    margin-bottom: 15px;
     opacity: 0; filter: blur(15px); transform: translateY(20px);
-    animation: appleFadeIn 1.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-    animation-delay: 0.5s;
+    animation: showUp 1.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards 0.5s;
   }
+  
   #intro-screen p {
-    font-size: 20px; color: #86868b; letter-spacing: 4px; margin-top: 0;
+    font-size: 22px;
+    color: #888;
+    letter-spacing: 6px;
     opacity: 0; filter: blur(10px); transform: translateY(20px);
-    animation: appleFadeIn 1.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-    animation-delay: 1.2s;
+    animation: showUp 1.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards 1.2s;
   }
 
-  /* ----- 2. 主页布局 (左右分栏) ----- */
+  #version-display {
+    position: absolute;
+    bottom: 30px;
+    right: 40px;
+    font-size: 14px;
+    color: #555;
+    letter-spacing: 2px;
+    font-family: monospace;
+    opacity: 0;
+    animation: showUp 1s ease forwards 2s;
+  }
+
   #main-screen {
     display: flex;
     width: 100%;
     height: 100vh;
     opacity: 0;
-    animation: appleFadeIn 1.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-    animation-delay: 4.5s; /* 等入场动画结束 */
-    pointer-events: none; /* 动画完再允许点击 */
+    animation: showUp 1.5s ease forwards 4.5s;
+    pointer-events: none;
   }
   #main-screen.active { pointer-events: auto; }
 
-  /* 左侧菜单 */
   .left-menu {
-    width: 40%;
+    width: 45%;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding-left: 10%;
-    gap: 20px;
+    padding-left: 12%;
+    gap: 30px;
     z-index: 2;
   }
+
   .menu-btn {
     background: transparent;
     border: none;
-    color: #86868b; /* 默认灰色 */
-    font-size: 32px;
-    font-weight: 600;
+    color: #555;
+    font-size: 40px;
+    font-weight: bold;
     text-align: left;
     cursor: pointer;
-    padding: 10px 0;
     transition: all 0.4s ease;
-    letter-spacing: 2px;
+    letter-spacing: 3px;
   }
-  /* 鼠标悬停时的文字效果 */
+  
   .menu-btn:hover {
     color: #fff;
-    transform: translateX(10px); /* 向右微微移动 */
-    text-shadow: 0 0 20px rgba(255,255,255,0.3);
+    transform: translateX(15px);
+    text-shadow: 0 0 30px rgba(255,255,255,0.4);
   }
 
-  /* 右侧图片区域 */
   .right-images {
-    width: 60%;
+    width: 55%;
     display: flex;
     justify-content: center;
     align-items: center;
     position: relative;
   }
+
   .hover-img {
     position: absolute;
-    max-width: 80%;
-    max-height: 80vh;
-    object-fit: contain;
-    opacity: 0; /* 默认隐藏 */
+    width: 80%;
+    height: 80%;
+    opacity: 0;
     transition: opacity 0.6s ease, transform 0.6s ease;
-    transform: scale(0.95);
-    border-radius: 12px;
-  }
-  /* 当左侧悬浮时，显示对应图片 */
-  .menu-btn:hover ~ .right-images #img-camera,
-  .menu-btn:hover ~ .right-images #img-rent {
-      /* 占位，具体由JS或下方CSS控制 */
-  }
-  
-  /* 用 CSS 直接控制图片显隐，更顺滑 */
-  #main-screen:hover #img-camera { opacity: 1; transform: scale(1); }
-  /* 注意：因为两个按钮都在左侧，我们通过JS来控制精准显示 */
-  .hover-img.show {
-    opacity: 1 !important;
-    transform: scale(1) !important;
+    transform: scale(0.95) translateX(20px);
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
   }
 
-  /* ----- 3. 详情页 (转场后) ----- */
+  .hover-img.show {
+    opacity: 1;
+    transform: scale(1) translateX(0);
+  }
+
+  #img-camera {
+    background-image: url('camera.jpg');
+  }
+
+  #img-rent {
+    background-image: url('rent.jpg');
+  }
+
+  #announcement-modal {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 50;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  
+  #announcement-modal.active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .modal-content {
+    background: #111;
+    border: 1px solid #333;
+    padding: 40px;
+    border-radius: 16px;
+    max-width: 500px;
+    width: 90%;
+    color: #ccc;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.8);
+    transform: translateY(20px);
+    transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  #announcement-modal.active .modal-content { transform: translateY(0); }
+
+  .modal-content h2 { color: #fff; margin-bottom: 20px; font-size: 24px; letter-spacing: 1px; }
+  .modal-content ul { line-height: 2; margin-bottom: 30px; font-size: 15px; color: #aaa; padding-left: 20px; }
+  .modal-content label { display: flex; align-items: center; gap: 10px; font-size: 14px; color: #888; cursor: pointer; margin-bottom: 30px; user-select: none; }
+  .modal-content input[type="checkbox"] { accent-color: #fff; width: 16px; height: 16px; cursor: pointer; }
+
+  .modal-content button {
+    width: 100%; padding: 16px; background: #fff; color: #000; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s; letter-spacing: 2px;
+  }
+  .modal-content button:hover { background: #ccc; transform: scale(1.02); }
+
   #detail-page {
     position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
+    top: 0; left: 0; width: 100%; height: 100vh;
     background: #000;
     display: flex;
     flex-direction: column;
@@ -126,89 +180,97 @@
     align-items: center;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.8s ease;
+    transition: all 0.8s ease;
     z-index: 20;
+    cursor: pointer;
   }
-  #detail-page.active {
-    opacity: 1;
-    visibility: visible;
-  }
-  #detail-page h1 {
-    color: #86868b;
-    font-size: 40px;
-    letter-spacing: 4px;
-  }
+  
+  #detail-page.active { opacity: 1; visibility: visible; }
+  #detail-page h1 { color: #fff; font-size: 50px; letter-spacing: 5px; }
+  #detail-page p { color: #555; margin-top: 20px; font-size: 16px; }
 
-  /* ----- 动画关键帧 ----- */
-  @keyframes appleFadeIn {
-    100% { opacity: 1; filter: blur(0); transform: translateY(0); }
-  }
-  @keyframes fadeOutSequence {
-    0%, 60% { opacity: 1; filter: blur(0); }
-    100% { opacity: 0; filter: blur(20px); }
-  }
+  @keyframes showUp { to { opacity: 1; filter: blur(0); transform: translateY(0); } }
+  @keyframes fadeOutSequence { 0%, 60% { opacity: 1; filter: blur(0); } 100% { opacity: 0; filter: blur(20px); visibility: hidden; } }
 </style>
 </head>
 <body>
 
-  <!-- 1. 入场文字 -->
   <div id="intro-screen">
     <h1>無限可能</h1>
     <p>快门即是永恒</p >
+    <div id="version-display">beta v0.15</div>
   </div>
 
-  <!-- 2. 主页 -->
   <div id="main-screen">
     <div class="left-menu">
-      <button class="menu-btn" data-target="img-camera" onclick="showDetail()">商业拍摄</button>
-      <button class="menu-btn" data-target="img-rent" onclick="showDetail()">影视道具租赁</button>
+      <button class="menu-btn" data-target="img-camera">商业拍摄</button>
+      <button class="menu-btn" data-target="img-rent">影视道具租赁</button>
     </div>
     
     <div class="right-images">
-      <!-- 注意这里的 src 必须和你上传的图片文件名一致 -->
-      < img src="camera.jpg" id="img-camera" class="hover-img" alt="商业拍摄">
-      < img src="rent.jpg" id="img-rent" class="hover-img" alt="影视道具租赁">
+      <div id="img-camera" class="hover-img"></div>
+      <div id="img-rent" class="hover-img"></div>
     </div>
   </div>
 
-  <!-- 3. 介绍页（正在制作） -->
-  <div id="detail-page">
-    <h1>正在制作</h1>
-    <p style="color:#555; margin-top:20px;">（点击屏幕任意位置返回）</p >
+  <div id="announcement-modal">
+    <div class="modal-content">
+      <h2>v0.15 更新说明</h2>
+      <ul>
+        <li>新增左侧悬浮菜单与右侧动态图片展示</li>
+        <li>加入电影级入场动画与淡出转场</li>
+        <li>加入右下角版本号显示</li>
+      </ul>
+      <label>
+        <input type="checkbox" id="dont-show-again"> 选择本次更新公告不再提示
+      </label>
+      <button id="close-announcement">我知道了</button>
+    </div>
   </div>
 
-  <!-- 交互脚本 -->
+  <div id="detail-page">
+    <h1>正在制作</h1>
+    <p>（点击屏幕任意位置返回）</p >
+  </div>
+
   <script>
-    // 入场动画结束后，激活主页点击事件
+    const CURRENT_VERSION = 'v0.15';
+
     setTimeout(() => {
       document.getElementById('main-screen').classList.add('active');
-    }, 4500);
+      const hasSeen = localStorage.getItem('hasSeenAnnouncement_' + CURRENT_VERSION);
+      if (!hasSeen) {
+        document.getElementById('announcement-modal').classList.add('active');
+      }
+    }, 5000);
 
-    // 处理悬停显示图片
+    document.getElementById('close-announcement').addEventListener('click', () => {
+      const dontShowCheckbox = document.getElementById('dont-show-again');
+      if (dontShowCheckbox.checked) {
+        localStorage.setItem('hasSeenAnnouncement_' + CURRENT_VERSION, 'true');
+      }
+      document.getElementById('announcement-modal').classList.remove('active');
+    });
+
     const buttons = document.querySelectorAll('.menu-btn');
     const images = document.querySelectorAll('.hover-img');
 
     buttons.forEach(btn => {
       btn.addEventListener('mouseenter', () => {
-        // 隐藏所有图
         images.forEach(img => img.classList.remove('show'));
-        // 显示对应的图
         const targetId = btn.getAttribute('data-target');
         document.getElementById(targetId).classList.add('show');
       });
       
       btn.addEventListener('mouseleave', () => {
-        // 鼠标移出按钮，隐藏所有图
         images.forEach(img => img.classList.remove('show'));
+      });
+
+      btn.addEventListener('click', () => {
+        document.getElementById('detail-page').classList.add('active');
       });
     });
 
-    // 处理点击转场
-    function showDetail() {
-      document.getElementById('detail-page').classList.add('active');
-    }
-
-    // 点击详情页返回
     document.getElementById('detail-page').addEventListener('click', () => {
       document.getElementById('detail-page').classList.remove('active');
     });
