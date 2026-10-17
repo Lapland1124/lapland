@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Welcome</title>
+<title>無限可能 - 快门即是永恒</title>
 <style>
-  /* 基础设置：黑底白字，禁止滚动 */
+  /* 基础设置：黑底白字，铺满全屏 */
   body {
     margin: 0;
     padding: 0;
@@ -19,51 +19,99 @@
     overflow: hidden;
   }
 
-  .container {
+  /* ----- 第一部分：入场文字动画 ----- */
+  #intro-screen {
+    position: absolute;
     text-align: center;
+    /* 整体动画：出现 -> 停留 -> 淡出消失 */
+    animation: fadeOutSequence 5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
   }
 
-  /* 苹果风格的字体 */
-  h1 {
+  #intro-screen h1 {
     font-size: 48px;
     font-weight: 600;
-    letter-spacing: -1px;
+    letter-spacing: 2px;
     margin-bottom: 10px;
-    /* 初始状态：透明、模糊、往下掉一点点 */
     opacity: 0;
-    filter: blur(10px);
+    filter: blur(15px);
     transform: translateY(20px);
-    /* 动画：名称 时长 缓动函数 保持最后状态 延迟时间 */
+    /* 文字浮现动画 */
     animation: appleFadeIn 1.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-    animation-delay: 0.3s;
+    animation-delay: 0.5s;
   }
 
-  p {
+  #intro-screen p {
     font-size: 20px;
-    color: #86868b; /* 苹果常用的灰色 */
+    color: #86868b;
+    letter-spacing: 4px;
     margin-top: 0;
     opacity: 0;
     filter: blur(10px);
     transform: translateY(20px);
     animation: appleFadeIn 1.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-    animation-delay: 0.8s; /* 比标题晚一点出来 */
+    animation-delay: 1.2s;
   }
 
-  /* 定义动画过程：从透明/模糊，变成清晰/归位 */
+  /* ----- 第二部分：主页选项动画 ----- */
+  #main-screen {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    opacity: 0;
+    /* 延迟4.5秒出现（等前面的字消失） */
+    animation: appleFadeIn 1.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    animation-delay: 4.5s;
+    /* 防止入场时误触 */
+    pointer-events: none;
+  }
+
+  /* 按钮样式（苹果风格极简风） */
+  .btn {
+    display: inline-block;
+    padding: 18px 60px;
+    font-size: 18px;
+    color: #f5f5f7;
+    text-decoration: none;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 40px;
+    background: rgba(255, 255, 255, 0.05);
+    transition: all 0.4s ease;
+    cursor: pointer;
+    letter-spacing: 1px;
+  }
+
+  /* 鼠标放上去的效果 */
+  .btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.8);
+    transform: scale(1.05);
+  }
+
+  /* ----- 动画关键帧定义 ----- */
   @keyframes appleFadeIn {
-    100% {
-      opacity: 1;
-      filter: blur(0);
-      transform: translateY(0);
-    }
+    100% { opacity: 1; filter: blur(0); transform: translateY(0); }
+  }
+
+  @keyframes fadeOutSequence {
+    0%, 60% { opacity: 1; filter: blur(0); } /* 0到3秒保持清晰 */
+    100% { opacity: 0; filter: blur(20px); } /* 第5秒完全模糊消失 */
   }
 </style>
 </head>
 <body>
 
-  <div class="container">
-    <h1>Lapland</h1>
-    <p>Think different. 你的第一个网页。</p>
+  <!-- 入场文字 -->
+  <div id="intro-screen">
+    <h1>無限可能</h1>
+    <p>快门即是永恒</p>
+  </div>
+
+  <!-- 主页按钮区 -->
+  <div id="main-screen" style="pointer-events: auto;">
+    <!-- href="#" 表示目前点击不跳转，以后你可以换成真正的链接 -->
+    <a href="#" class="btn">商业拍摄</a>
+    <a href="#" class="btn">影视道具租赁</a>
   </div>
 
 </body>
