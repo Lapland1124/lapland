@@ -15,211 +15,200 @@
     overflow: hidden;
   }
 
+  /* ---------------- 1. 入场动画 ---------------- */
   #intro-screen {
-    position: absolute;
-    width: 100%;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    z-index: 10;
-    animation: fadeOutSequence 5s ease forwards;
+    position: absolute; width: 100%; height: 100vh;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    z-index: 100; animation: fadeOutSequence 5s ease forwards;
   }
-  
   #intro-screen h1 {
-    font-size: 60px;
-    letter-spacing: 5px;
-    margin-bottom: 15px;
+    font-size: 60px; letter-spacing: 5px; margin-bottom: 15px;
     opacity: 0; filter: blur(15px); transform: translateY(20px);
     animation: showUp 1.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards 0.5s;
   }
-  
   #intro-screen p {
-    font-size: 22px;
-    color: #888;
-    letter-spacing: 6px;
+    font-size: 22px; color: #888; letter-spacing: 6px;
     opacity: 0; filter: blur(10px); transform: translateY(20px);
     animation: showUp 1.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards 1.2s;
   }
-
   #version-display {
-    position: absolute;
-    bottom: 30px;
-    right: 40px;
-    font-size: 14px;
-    color: #555;
-    letter-spacing: 2px;
-    font-family: monospace;
-    opacity: 0;
-    animation: showUp 1s ease forwards 2s;
+    position: absolute; bottom: 30px; right: 40px; font-size: 14px; color: #555; letter-spacing: 2px;
+    opacity: 0; animation: showUp 1s ease forwards 2s;
+  }
+
+  /* ---------------- 2. 主页布局 ---------------- */
+  #main-wrapper {
+    width: 100%; height: 100vh;
+    transition: filter 0.8s ease, opacity 0.8s ease;
+  }
+  #main-wrapper.blurred {
+    filter: blur(15px) brightness(0.4);
+    pointer-events: none;
   }
 
   #main-screen {
-    display: flex;
-    width: 100%;
-    height: 100vh;
-    opacity: 0;
-    animation: showUp 1.5s ease forwards 4.5s;
-    pointer-events: none;
+    display: flex; width: 100%; height: 100vh;
+    opacity: 0; animation: showUp 1.5s ease forwards 4.5s; pointer-events: none;
   }
   #main-screen.active { pointer-events: auto; }
 
   .left-menu {
-    width: 45%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding-left: 12%;
-    gap: 30px;
-    z-index: 2;
+    width: 45%; display: flex; flex-direction: column; justify-content: center; padding-left: 12%; gap: 30px; z-index: 2;
   }
-
   .menu-btn {
-    background: transparent;
-    border: none;
-    color: #555;
-    font-size: 40px;
-    font-weight: bold;
-    text-align: left;
-    cursor: pointer;
-    transition: all 0.4s ease;
-    letter-spacing: 3px;
+    background: transparent; border: none; color: #555; font-size: 40px; font-weight: bold; text-align: left; cursor: pointer; transition: all 0.4s ease; letter-spacing: 3px;
   }
-  
-  .menu-btn:hover {
-    color: #fff;
-    transform: translateX(15px);
-    text-shadow: 0 0 30px rgba(255,255,255,0.4);
-  }
+  .menu-btn:hover { color: #fff; transform: translateX(15px); text-shadow: 0 0 30px rgba(255,255,255,0.4); }
 
   .right-images {
-    width: 55%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
+    width: 55%; display: flex; justify-content: center; align-items: center; position: relative;
   }
-
   .hover-img {
-    position: absolute;
-    width: 80%;
-    height: 80%;
-    opacity: 0;
-    transition: opacity 0.6s ease, transform 0.6s ease;
-    transform: scale(0.95) translateX(20px);
-    background-size: contain;
-    background-position: center;
-    background-repeat: no-repeat;
+    position: absolute; width: 80%; height: 80%; opacity: 0; transition: opacity 0.6s ease, transform 0.6s ease;
+    transform: scale(0.95) translateX(20px); background-size: contain; background-position: center; background-repeat: no-repeat;
   }
+  .hover-img.show { opacity: 1; transform: scale(1) translateX(0); }
+  #img-camera { background-image: url('camera.jpg'); }
+  #img-rent { background-image: url('rent.jpg'); }
 
-  .hover-img.show {
-    opacity: 1;
-    transform: scale(1) translateX(0);
-  }
-
-  #img-camera {
-    background-image: url('camera.jpg');
-  }
-
-  #img-rent {
-    background-image: url('rent.jpg');
-  }
-
+  /* ---------------- 3. 更新公告弹窗 ---------------- */
   #announcement-modal {
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 50;
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+    display: flex; justify-content: center; align-items: center; z-index: 200;
+    opacity: 0; visibility: hidden; transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
   }
-  
-  #announcement-modal.active {
-    opacity: 1;
-    visibility: visible;
-  }
-
+  #announcement-modal.active { opacity: 1; visibility: visible; }
   .modal-content {
-    background: #111;
-    border: 1px solid #333;
-    padding: 40px;
-    border-radius: 16px;
-    max-width: 500px;
-    width: 90%;
-    color: #ccc;
-    box-shadow: 0 30px 60px rgba(0,0,0,0.8);
-    transform: translateY(20px);
-    transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+    background: #111; border: 1px solid #333; padding: 40px; border-radius: 16px; max-width: 500px; width: 90%;
+    color: #ccc; box-shadow: 0 30px 60px rgba(0,0,0,0.8); transform: translateY(20px); transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
   }
   #announcement-modal.active .modal-content { transform: translateY(0); }
-
   .modal-content h2 { color: #fff; margin-bottom: 20px; font-size: 24px; letter-spacing: 1px; }
   .modal-content ul { line-height: 2; margin-bottom: 30px; font-size: 15px; color: #aaa; padding-left: 20px; }
-  .modal-content label { display: flex; align-items: center; gap: 10px; font-size: 14px; color: #888; cursor: pointer; margin-bottom: 30px; user-select: none; }
+  .modal-content label { display: flex; align-items: center; gap: 10px; font-size: 14px; color: #888; cursor: pointer; margin-bottom: 30px; }
   .modal-content input[type="checkbox"] { accent-color: #fff; width: 16px; height: 16px; cursor: pointer; }
-
   .modal-content button {
     width: 100%; padding: 16px; background: #fff; color: #000; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s; letter-spacing: 2px;
   }
   .modal-content button:hover { background: #ccc; transform: scale(1.02); }
 
+  /* ---------------- 4. 正在制作详情页 ---------------- */
   #detail-page {
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 100vh;
-    background: #000;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.8s ease;
-    z-index: 20;
-    cursor: pointer;
+    position: absolute; top: 0; left: 0; width: 100%; height: 100vh; background: #000;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    opacity: 0; visibility: hidden; transition: all 0.8s ease; z-index: 50; cursor: pointer;
   }
-  
   #detail-page.active { opacity: 1; visibility: visible; }
   #detail-page h1 { color: #fff; font-size: 50px; letter-spacing: 5px; }
   #detail-page p { color: #555; margin-top: 20px; font-size: 16px; }
 
+  /* ---------------- 5. 影视道具租赁 - 全新详情页 ---------------- */
+  #rent-page {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+    display: flex; z-index: 60; opacity: 0; visibility: hidden; transition: all 0.6s ease;
+  }
+  #rent-page.active { opacity: 1; visibility: visible; }
+
+  /* 返回按钮 */
+  .back-btn {
+    position: absolute; top: 40px; left: 40px; color: #888; font-size: 16px;
+    cursor: pointer; transition: color 0.3s; z-index: 70; letter-spacing: 1px;
+  }
+  .back-btn:hover { color: #fff; }
+
+  /* 左侧导航区 */
+  .rent-nav {
+    width: 40%; padding: 15vh 0 0 8vw; display: flex; flex-direction: column;
+  }
+  .rent-main-title {
+    font-size: 48px; font-weight: bold; letter-spacing: 4px; margin-bottom: 60px;
+    opacity: 0; transform: translateX(-20px); animation: slideRight 0.8s ease forwards 0.3s;
+  }
+  
+  .nav-line-item {
+    margin-bottom: 40px; cursor: pointer; opacity: 0; transform: translateX(-30px);
+  }
+  .nav-line-item:nth-child(1) { animation: slideRight 0.8s ease forwards 0.6s; }
+  .nav-line-item:nth-child(2) { animation: slideRight 0.8s ease forwards 0.8s; }
+  .nav-line-item:nth-child(3) { animation: slideRight 0.8s ease forwards 1.0s; }
+
+  .nav-line-title {
+    font-size: 22px; color: #666; letter-spacing: 2px; margin-bottom: 15px; transition: all 0.4s;
+  }
+  .nav-line-item:hover .nav-line-title, .nav-line-item.active .nav-line-title {
+    color: #fff; text-shadow: 0 0 20px rgba(255,255,255,0.3);
+  }
+  
+  /* 展开的横线 */
+  .line-bar {
+    height: 1px; width: 0; background-color: #333; transition: width 1s cubic-bezier(0.2, 0.8, 0.2, 1), background-color 0.4s;
+  }
+  .nav-line-item.active .line-bar, .nav-line-item:hover .line-bar {
+    background-color: #fff; width: 100%; /* 展开到100% */
+  }
+
+  /* 右侧内容区 */
+  .rent-content-area {
+    width: 60%; padding: 15vh 8vw 15vh 4vw; overflow-y: auto; position: relative;
+  }  
+ 
+  /* 自定义滚动条 */
+  .rent-content-area::-webkit-scrollbar { width: 4px; }
+  .rent-content-area::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
+  .rent-content-area::-webkit-scrollbar-thumb:hover { background: #666; }
+
+  .content-block {
+    display: none; opacity: 0; transform: translateY(20px); transition: all 0.6s ease;
+  }
+  .content-block.active { display: block; opacity: 1; transform: translateY(0); }
+
+  /* 文案排版样式 */
+  .content-block h3 { color: #fff; font-size: 24px; margin-bottom: 20px; letter-spacing: 1px; }
+  .content-block p { color: #aaa; font-size: 15px; line-height: 2; margin-bottom: 20px; text-align: justify; }
+  .content-block h4 { color: #ddd; font-size: 18px; margin: 30px 0 15px 0; }
+  .content-block strong { color: #fff; font-weight: 600; }
+
+  /* 动画定义 */
   @keyframes showUp { to { opacity: 1; filter: blur(0); transform: translateY(0); } }
   @keyframes fadeOutSequence { 0%, 60% { opacity: 1; filter: blur(0); } 100% { opacity: 0; filter: blur(20px); visibility: hidden; } }
+  @keyframes slideRight { to { opacity: 1; transform: translateX(0); } }
 </style>
 </head>
 <body>
 
+  <!-- 1. 入场动画 -->
   <div id="intro-screen">
     <h1>無限可能</h1>
     <p>快门即是永恒</p >
     <div id="version-display">beta v0.15</div>
   </div>
 
-  <div id="main-screen">
-    <div class="left-menu">
-      <button class="menu-btn" data-target="img-camera">商业拍摄</button>
-      <button class="menu-btn" data-target="img-rent">影视道具租赁</button>
-    </div>
-    
-    <div class="right-images">
-      <div id="img-camera" class="hover-img"></div>
-      <div id="img-rent" class="hover-img"></div>
+  <!-- 2. 主页 -->
+  <div id="main-wrapper">
+    <div id="main-screen">
+      <div class="left-menu">
+        <!-- 商业拍摄 点击进入正在制作 -->
+        <button class="menu-btn" id="btn-commercial" data-target="img-camera">商业拍摄</button>
+        <!-- 影视道具租赁 点击进入新详情页 -->
+        <button class="menu-btn" id="btn-rent" data-target="img-rent">影视道具租赁</button>
+      </div>
+      
+      <div class="right-images">
+        <div id="img-camera" class="hover-img"></div>
+        <div id="img-rent" class="hover-img"></div>
+      </div>
     </div>
   </div>
 
+  <!-- 3. 更新公告 -->
   <div id="announcement-modal">
     <div class="modal-content">
       <h2>v0.15 更新说明</h2>
       <ul>
         <li>新增左侧悬浮菜单与右侧动态图片展示</li>
         <li>加入电影级入场动画与淡出转场</li>
-        <li>加入右下角版本号显示</li>
+        <li>新增“影视道具租赁”专属详情页及业务介绍</li>
       </ul>
       <label>
         <input type="checkbox" id="dont-show-again"> 选择本次更新公告不再提示
@@ -228,14 +217,111 @@
     </div>
   </div>
 
+  <!-- 4. 正在制作页 -->
   <div id="detail-page">
     <h1>正在制作</h1>
     <p>（点击屏幕任意位置返回）</p >
   </div>
 
+  <!-- 5. 影视道具租赁 详情页 -->
+  <div id="rent-page">
+    <div class="back-btn" id="back-home">← 返回首页</div>
+    
+    <div class="rent-nav">
+      <div class="rent-main-title">影视道具租赁</div>
+      
+      <!-- 第一条线 -->
+      <div class="nav-line-item active" data-content="content-1">
+        <div class="nav-line-title">我们包括的设备与配件</div>
+        <div class="line-bar"></div>
+      </div>
+      
+      <!-- 第二条线 -->
+      <div class="nav-line-item" data-content="content-2">
+        <div class="nav-line-title">新老租户福利</div>
+        <div class="line-bar"></div>
+      </div>
+      
+      <!-- 第三条线 -->
+      <div class="nav-line-item" data-content="content-3">
+        <div class="nav-line-title">关于服务业务</div>
+        <div class="line-bar"></div>
+      </div>
+    </div>
+
+    <div class="rent-content-area">
+      
+      <!-- 内容 1 -->
+      <div id="content-1" class="content-block active">
+        <h3>一、全品类器材全覆盖，一站式配齐拍摄装备</h3>
+        <p>我们整合了行业内全品类高端摄影、摄像、航拍、收音、监看辅助设备，涵盖拍摄全流程所需主机、镜头、稳定设备、航拍设备、音视频传输设备及全套精密配件，无需多店拼凑，一站即可配齐整套拍摄方案。</p >
+        
+        <h4>1. 核心拍摄主机设备</h4>
+        <p>包含各大主流品牌专业相机机身，涵盖全画幅、半画幅、微单、专业摄像机身等多款热门机型，适配日常写真、商业商拍、视频短片、专业影视拍摄等不同需求，设备更新迭代快，常年上新新款机型，杜绝老旧卡顿设备，拍摄画质清晰、性能稳定。</p >
+        
+        <h4>2. 全焦段专业摄影镜头</h4>
+        <p>配备超广角、广角、标准定焦、中长焦、大光圈人像、微距、长焦变焦、电影镜头等全系焦段镜头，满足风光航拍、人像写真、产品静物、夜景拍摄、影视运镜、虚化大片等所有拍摄场景需求，镜头无霉无灰、对焦精准、画质无损。</p >
+        
+        <h4>3. 专业防抖稳定设备</h4>
+        <p>囊括手持云台稳定器、专业斯坦尼康、机械稳定设备等各类防抖器材，适配单兵短视频拍摄、长时跟拍、运动镜头、影视推拉运镜等场景，有效解决画面抖动问题，轻松拍出丝滑、流畅、专业的运镜画面，适配新手到专业团队所有使用人群。</p >
+        
+        <h4>4. 航拍影像设备</h4>
+        <p>提供多款高清专业无人机设备，支持4K/8K高清航拍、延时摄影、全景航拍、高空全景取景，适用于风光大片、城市航拍、工程记录、婚礼航拍、文旅短视频、企业宣传片等场景，设备飞行稳定、画质高清、续航充足。</p >
+        
+        <h4>5. 监看与传输设备</h4>
+        <p>配备高清影视监视器、无线图传设备，支持实时画面传输、户外监看、多设备同步监看，解决户外强光看不清画面、远程拍摄无法实时预览的难题，让拍摄构图、曝光、色彩精准可控，大幅提升成片质量与拍摄效率。</p >
+        
+        <h4>6. 专业收音音频设备</h4>
+        <p>涵盖各类领夹麦克风、手持收音麦、无线降噪麦克风、专业录音设备，适配短视频口播、户外探店、采访纪实、婚礼录制、直播带货等场景，有效隔绝环境噪音，收音清晰纯净，保障视频音频质感。</p >
+        
+        <h4>7. 全套辅助拍摄配件</h4>
+        <p>齐全配备专业三脚架、多功能滤镜、跟焦手轮、补光配件、收纳防护配件等全套辅助器材。三脚架稳固防滑，适配室内外各类拍摄环境；偏振镜、减光镜、渐变镜等多款滤镜，满足风光、夜景、强光拍摄调色需求；跟焦手轮精准控焦，适配专业电影级运镜对焦需求，全方位辅助高质量拍摄。</p >
+      </div>
+
+      <!-- 内容 2 -->
+      <div id="content-2" class="content-block">
+        <h3>二、三大专属福利，降低创作门槛，人人享实惠</h3>
+        <p>我们摒弃传统租赁行业高押金、价格不透明、无福利的弊端，主打低门槛、高福利、高灵活的租赁服务，让利每一位创作者，让专业设备不再昂贵。</p >
+        
+        <h4>1. 高信誉用户专属：全程免押金租赁</h4>
+        <p>针对平台高信誉用户，我们开放全额免押金特权，无需支付高额设备押金，仅凭信誉即可租借全套高端器材。彻底解决用户押金占用资金、资金周转困难的问题，轻量化租赁，零压力开拍，大幅降低设备使用门槛。</p >
+        
+        <h4>2. 全员普惠：定期全新机型免费试用</h4>
+        <p>面向所有新老用户开放常态化新机试用服务，定期上架全新相机、镜头、无人机、稳定器等新款热门器材。无论个人新手、兼职创作者，还是长期合作工作室，均可参与机型试用活动，免费体验行业顶配新设备，抢先上手新款器材功能，助力提升拍摄技术与创作质感。</p >
+        
+        <h4>3. 长期专属：多租多享阶梯优惠</h4>
+        <p>平台开通多租多优惠长效福利机制，支持单套长租、多设备同租、长期合作包月/包季/包年优惠。租赁设备数量越多、租赁周期越长，享受的折扣力度越大，阶梯式降价、价格透明无套路。适合自媒体工作室、影视团队、婚庆拍摄团队、兼职摄影师长期合作，长期租赁性价比远超购机，节省大量设备采购、保养、存放成本。</p >
+      </div>
+
+      <!-- 内容 3 -->
+      <div id="content-3" class="content-block">
+        <h3>三、核心服务优势，靠谱省心更专业</h3>
+        
+        <h4>1. 设备优质可靠</h4>
+        <p>所有器材定期检修、清洁、校准、保养，杜绝故障机、翻新机、老旧机，设备到手即可直接开拍，性能、画质、稳定性均有保障。</p >
+        
+        <h4>2. 品类齐全省心</h4>
+        <p>拍摄、防抖、航拍、收音、图传、监看、辅助配件一站式配齐，无需多处租借，节省时间成本。</p >
+        
+        <h4>3. 租赁方式灵活</h4>
+        <p>支持日租、周租、月租、长包租，适配单次拍摄、短期创作、长期接单等所有使用场景。</p >
+        
+        <h4>4. 服务贴心高效</h4>
+        <p>咨询对接专业，可根据拍摄场景免费搭配设备套餐，新手也能快速选对器材，轻松上手拍摄。</p >
+        
+        <br>
+        <p><strong>专注影视器材租赁，服务万千创作人群。我们始终以「优质设备、实惠价格、贴心服务」为核心，让每一位创作者都能随心使用专业影视设备，无惧设备限制，尽情释放创作灵感！</strong></p >
+        <p style="font-size: 13px; color: #666; margin-top: 30px;">* 专业影视摄影器材一站式租赁服务，专注影视创作、商业拍摄、短视频制作、婚礼纪实、直播探店、航拍创作等全场景设备支持。</p >
+      </div>
+
+    </div>
+  </div>
+
   <script>
+    // ---------------- 核心逻辑 ----------------
     const CURRENT_VERSION = 'v0.15';
 
+    // 1. 启动逻辑
     setTimeout(() => {
       document.getElementById('main-screen').classList.add('active');
       const hasSeen = localStorage.getItem('hasSeenAnnouncement_' + CURRENT_VERSION);
@@ -244,6 +330,7 @@
       }
     }, 5000);
 
+    // 关闭公告
     document.getElementById('close-announcement').addEventListener('click', () => {
       const dontShowCheckbox = document.getElementById('dont-show-again');
       if (dontShowCheckbox.checked) {
@@ -252,6 +339,7 @@
       document.getElementById('announcement-modal').classList.remove('active');
     });
 
+    // 2. 首页悬浮图片逻辑
     const buttons = document.querySelectorAll('.menu-btn');
     const images = document.querySelectorAll('.hover-img');
 
@@ -259,20 +347,58 @@
       btn.addEventListener('mouseenter', () => {
         images.forEach(img => img.classList.remove('show'));
         const targetId = btn.getAttribute('data-target');
-        document.getElementById(targetId).classList.add('show');
+        if(document.getElementById(targetId)) document.getElementById(targetId).classList.add('show');
       });
-      
       btn.addEventListener('mouseleave', () => {
         images.forEach(img => img.classList.remove('show'));
       });
+    });
 
-      btn.addEventListener('click', () => {
-        document.getElementById('detail-page').classList.add('active');
+    // 3. 商业拍摄 -> 正在制作页
+    document.getElementById('btn-commercial').addEventListener('click', () => {
+      document.getElementById('detail-page').classList.add('active');
+    });
+    document.getElementById('detail-page').addEventListener('click', () => {
+      document.getElementById('detail-page').classList.remove('active');
+    });
+
+    // 4. 影视道具租赁 -> 打开新详情页 + 背景模糊
+    document.getElementById('btn-rent').addEventListener('click', () => {
+      // 背景模糊
+      document.getElementById('main-wrapper').classList.add('blurred');
+      // 显示租赁页
+      document.getElementById('rent-page').classList.add('active');
+    });
+
+    // 5. 租赁页的导航点击切换 (三大项)
+    const navItems = document.querySelectorAll('.nav-line-item');
+    const contentBlocks = document.querySelectorAll('.content-block');
+    const scrollArea = document.querySelector('.rent-content-area');
+
+    navItems.forEach(item => {
+      item.addEventListener('click', () => {
+        // 移除所有高亮
+        navItems.forEach(nav => nav.classList.remove('active'));
+        // 隐藏所有内容
+        contentBlocks.forEach(block => block.classList.remove('active'));
+
+        // 高亮当前
+        item.classList.add('active');
+        // 获取对应内容 ID 并显示
+        const targetContentId = item.getAttribute('data-content');
+        document.getElementById(targetContentId).classList.add('active');
+        
+        // 每次切换内容，右侧滚动条回到顶部
+        scrollArea.scrollTop = 0;
       });
     });
 
-    document.getElementById('detail-page').addEventListener('click', () => {
-      document.getElementById('detail-page').classList.remove('active');
+    // 6. 返回首页
+    document.getElementById('back-home').addEventListener('click', () => {
+      // 取消模糊
+      document.getElementById('main-wrapper').classList.remove('blurred');
+      // 隐藏租赁页
+      document.getElementById('rent-page').classList.remove('active');
     });
   </script>
 </body>
